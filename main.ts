@@ -1,41 +1,66 @@
 input.onButtonPressed(Button.AB, function () {
-    shotRange = strip.range(playerPos - 2, 5)
-    shotRange.showColor(neopixel.colors(NeoPixelColors.Blue))
-    basic.pause(250)
-    shotRange.showColor(neopixel.colors(NeoPixelColors.White))
-    strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Blue))
-    strip.show()
+    if (inputAvailable == true) {
+        inputAvailable = false
+        shotRange = strip.range(playerPos - 2, 5)
+        shotRange.showColor(neopixel.colors(NeoPixelColors.Red))
+        basic.pause(250)
+        shotRange.showColor(neopixel.colors(NeoPixelColors.White))
+        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+        strip.show()
+        inputAvailable = true
+    }
 })
 let shotRange: neopixel.Strip = null
 let playerPos = 0
 let strip: neopixel.Strip = null
+let inputAvailable = false
+inputAvailable = false
 strip = neopixel.create(DigitalPin.P0, 60, NeoPixelMode.RGB)
 playerPos = 0
 strip.clear()
-strip.showColor(neopixel.colors(NeoPixelColors.White))
-strip.setPixelColor(0, neopixel.colors(NeoPixelColors.Blue))
+strip.setPixelColor(0, neopixel.colors(NeoPixelColors.Red))
 strip.show()
-strip.setBrightness(100)
+inputAvailable = true
 basic.forever(function () {
     if (input.buttonIsPressed(Button.A)) {
-        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.White))
-        if (playerPos < strip.length() - 1) {
-            playerPos += 1
+        if (inputAvailable == true) {
+            strip.setBrightness(50)
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.White))
+            if (playerPos < strip.length() - 1) {
+                playerPos += 1
+            }
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+            strip.show()
+            basic.pause(25)
         }
-        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Blue))
-        strip.show()
     }
     if (input.buttonIsPressed(Button.B)) {
-        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.White))
-        if (playerPos > 0) {
-            playerPos += -1
+        if (inputAvailable == true) {
+            strip.setBrightness(50)
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Black))
+            if (playerPos > 0) {
+                playerPos += -1
+            }
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+            strip.show()
+            basic.pause(25)
         }
-        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Blue))
-        strip.show()
     }
 })
 basic.forever(function () {
     if (playerPos >= strip.length() - 1) {
         game.addScore(1)
+        inputAvailable = false
+        while (playerPos != 0) {
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Black))
+            playerPos += -1
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+            strip.show()
+            basic.pause(10)
+        }
+        strip.clear()
+        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+        strip.show()
+        inputAvailable = true
     }
 })
