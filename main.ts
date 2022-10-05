@@ -7,14 +7,16 @@ input.onButtonPressed(Button.AB, function () {
         shotRange.showColor(neopixel.colors(NeoPixelColors.Red))
         basic.pause(250)
         shotRange.showColor(neopixel.colors(NeoPixelColors.Black))
-        strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
-        strip.show()
         for (let enemy of unmovedEnemies) {
             if (enemy < shotPos && enemy > playerPos) {
                 unmovedEnemies.removeAt(unmovedEnemies.indexOf(enemy))
             }
         }
-        inputAvailable = true
+        if (gameOver == false) {
+            strip.setPixelColor(playerPos, neopixel.colors(NeoPixelColors.Red))
+            strip.show()
+            inputAvailable = true
+        }
     }
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
@@ -95,6 +97,11 @@ basic.forever(function () {
             strip.show()
             basic.pause(25)
         }
+    }
+})
+basic.forever(function () {
+    if (gameOver == false) {
+        basic.showNumber(game.score())
     }
 })
 basic.forever(function () {
