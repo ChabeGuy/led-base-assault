@@ -18,7 +18,8 @@ input.onButtonPressed(Button.AB, function () {
     }
 })
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
-    if (gameOver == true) {
+    if (ableToStart == true) {
+        ableToStart = false
         gameOver = false
         music.playSoundEffect(music.builtinSoundEffect(soundExpression.spring), SoundExpressionPlayMode.InBackground)
         inputAvailable = true
@@ -27,6 +28,7 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
 })
 let shotPos = 0
 let shotRange: neopixel.Strip = null
+let ableToStart = false
 let gameOver = false
 let unmovedEnemies: number[] = []
 let playerPos = 0
@@ -38,10 +40,11 @@ playerPos = 0
 unmovedEnemies = []
 let enemySpawnRate = 4000
 gameOver = true
+ableToStart = true
 strip.clear()
 strip.setPixelColor(0, neopixel.colors(NeoPixelColors.Red))
 strip.show()
-while (gameOver == true) {
+while (ableToStart == true) {
     basic.showLeds(`
         . . # . .
         . # # # .
@@ -113,8 +116,8 @@ basic.forever(function () {
         inputAvailable = true
     }
     if (playerPos == unmovedEnemies[unmovedEnemies.indexOf(playerPos)]) {
-        gameOver = true
         inputAvailable = false
+        gameOver = true
         strip.clear()
         strip.show()
         music.playSoundEffect(music.builtinSoundEffect(soundExpression.twinkle), SoundExpressionPlayMode.InBackground)
